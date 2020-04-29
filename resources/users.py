@@ -11,7 +11,7 @@ from playhouse.shortcuts import model_to_dict
 users = Blueprint('users', 'users')
 
 # create and delete user
-@users.route('/', methods=['POST', 'DELETE'])
+@users.route('/', methods=['GET', 'POST', 'DELETE'])
 def user():
   if request.method == 'POST':
     payload = request.get_json()
