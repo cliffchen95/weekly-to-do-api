@@ -1,6 +1,6 @@
 from peewee import *
 from flask_login import UserMixin
-import datetime
+
 
 DATABASE = SqliteDatabase('todo.sqlite')
 
@@ -11,9 +11,20 @@ class User(UserMixin, Model):
   class Meta:
     database = DATABASE
 
+class Event(Model):
+  title=TextField()
+  category=TextField()
+  description=TextField()
+  date=DateField()
+  user_id=ForeignKeyField(User, backref='events')
+
+  class Meta:
+    database = DATABASE
+
+
 def initialize():
   DATABASE.connect()
-  DATABASE.create_tables([User], safe=True)
+  DATABASE.create_tables([User, Event], safe=True)
   print('connected to database')
 
   DATABASE.close()
