@@ -1,5 +1,5 @@
 import models
-import datetime
+from datetime import *
 Event = models.Event
 
 from flask import Blueprint, request, jsonify
@@ -24,7 +24,7 @@ def event():
         category=payload['category'],
         title=payload['title'],
         description=payload['description'],
-        date=datetime.date.today(),
+        date=date(payload['year'], payload['month'], payload['day']),
         user=current_user.id
       )
 
@@ -37,6 +37,7 @@ def event():
         status=201
       ), 201
 
+  # need to implement query to select specfic dates and days
   if request.method == 'GET':
     if not current_user.is_authenticated:
       return jsonify(
@@ -54,3 +55,12 @@ def event():
         message=f'You have found {len(events)} events',
         status=200
       ), 200
+
+@events.route('/<id>', methods=['GET', 'DELETE', 'PATCH'])
+def event_id(id):
+  if request.method == 'GET':
+    return "get event id route"
+  if request.method == 'DELETE':
+    return "delete event id route"
+  if request.method == 'PATCH':
+    return "patch event id route"

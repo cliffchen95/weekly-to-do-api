@@ -15,7 +15,7 @@ class Event(Model):
   title=TextField()
   category=TextField()
   description=TextField()
-  date=DateField()
+  date=DateField(formats=['%Y-%m-%d'])
   user=ForeignKeyField(User, backref='events')
 
   class Meta:
