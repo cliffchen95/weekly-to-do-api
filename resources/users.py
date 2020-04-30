@@ -46,14 +46,21 @@ def user():
   if request.method == 'DELETE':
     return "you hit delete route"
 
-  if request.method == 'GET':
+@users.route('/logout', methods=['GET'])
+def user_logout():
+  if current_user.is_authenticated:
     logout_user()
     return jsonify(
       data={},
       message="Successfully logged out",
       status=200
     ), 200
-
+  else:
+    return jsonify(
+      data={},
+      message="No user is logged in",
+      status=412
+    ), 412
 
 @users.route('/login', methods=['POST'])
 def login():
