@@ -21,10 +21,17 @@ class Event(Model):
   class Meta:
     database = DATABASE
 
+class Goal(Model):
+  goal=TextField()
+  start_date=DateField(formats=['%Y-%m-%d'])
+  user=ForeignKeyField(User, backref='goals')
+
+  class Meta:
+    database = DATABASE
 
 def initialize():
   DATABASE.connect()
-  DATABASE.create_tables([User, Event], safe=True)
+  DATABASE.create_tables([User, Event, Goal], safe=True)
   print('connected to database')
 
   DATABASE.close()
