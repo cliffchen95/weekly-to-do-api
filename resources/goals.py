@@ -27,7 +27,16 @@ def goal():
   if request.method == 'POST':
     payload = request.get_json()
     try:
-      goal = Goal.get(Goal.start_date == start_date)
+      goal = Goal.get(
+        Goal.start_date == start_date,
+        Goal.user_id == current_user.id
+      )
+      print(current_user.id)
+      return jsonify(
+        data={},
+        message="Goal already existed",
+        status=403
+      ), 403
     except models.DoesNotExist:
       new_goal = Goal.create(
         goal=payload['goal'],
