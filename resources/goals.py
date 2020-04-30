@@ -88,11 +88,24 @@ def goal_id(id):
       status=403
     ), 403
 
+  payload = request.get_json()
   try:
     goal = Goal.get(
       Goal.id == id,
       Goal.user_id == current_user.id
     )
-    return "found goal"
+    goal.goal = payload['goal']
+    goal.save()
+    goal = model_to_dict(goal)
+    goal['user'].pop('password')
+    return jsonify(
+      data=goal,
+      message=f"Successfully updated goal with id {id}",
+      status=200
+    ), 200
   except models.DoesNotExist:
-    return "model does not exist"
+    return jsonify(
+      data={},
+      message="The goal does not exist or user not authorized",
+      status=403
+    ), 403
