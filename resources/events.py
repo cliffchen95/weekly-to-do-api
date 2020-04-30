@@ -59,8 +59,49 @@ def event_id(id):
     ), 403
   else:
     if request.method == 'GET':
-      return "get event id route"
+      try:
+        event = model_to_dict(Event.get_by_id(id))
+        if event['user']['id'] != current_user.id:
+          return jsonify(
+            data={},
+            message="Invalid event id or user does not have the event",
+            status=403
+          ), 403
+        else:
+          event['user'].pop('password')
+          return jsonify(
+            data=event,
+            message=f"Found event with id {id}",
+            status=200
+          ), 200
+      except:
+        return jsonify(
+          data={},
+          message="Invalid event id or user does not have the event",
+          status=403
+        ), 403
+
     if request.method == 'DELETE':
-      return "delete event id route"
+      try:
+        event_to_delete = Event.get_by_id(id)
+        if event_to_delete.user.id != current_user.id:
+          return jsonify(
+            data={},
+            message="Invalid event id or user does not have the event",
+            status=403
+          ), 403
+        else:
+          event_to_delete.delete_instance()
+          return jsonify(
+            data={},
+            message=f"Deleted event with id {id}",
+            status=200
+          ), 200
+      except:
+        return jsonify(
+          data={},
+          message="Invalid event id or user does not have the event",
+          status=403
+        ), 403
     if request.method == 'PATCH':
       return "patch event id route"
