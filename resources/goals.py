@@ -11,6 +11,13 @@ goals = Blueprint('goals', 'goals')
 
 @goals.route('/', methods=['GET', 'POST'])
 def goal():
+  if not current_user.is_authenticated:
+    return jsonify(
+      data={ 'error': '403 Forbidden'},
+      message="You need to be logged!",
+      status=403
+    ), 403
+
   year = request.args.get('year')
   month = request.args.get('month')
   day = request.args.get('day')
@@ -74,4 +81,11 @@ def goal():
 
 @goals.route('/<id>', methods=['PATCH'])
 def goal_id(id):
+  if not current_user.is_authenticated:
+    return jsonify(
+      data={ 'error': '403 Forbidden'},
+      message="You need to be logged!",
+      status=403
+    ), 403
+    
   return "id route"
