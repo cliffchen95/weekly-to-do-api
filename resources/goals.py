@@ -70,7 +70,7 @@ def goal():
         message="Goal has been found",
         status=200
       ), 200
-    except model.DoesNotExist: 
+    except models.DoesNotExist: 
       return jsonify(
         data={},
         message="Goal does not exist",
@@ -87,5 +87,12 @@ def goal_id(id):
       message="You need to be logged!",
       status=403
     ), 403
-    
-  return "id route"
+
+  try:
+    goal = Goal.get(
+      Goal.id == id,
+      Goal.user_id == current_user.id
+    )
+    return "found goal"
+  except models.DoesNotExist:
+    return "model does not exist"
