@@ -16,7 +16,7 @@ class Event(Model):
   category=TextField()
   description=TextField()
   date=DateField()
-  user_id=ForeignKeyField(User, backref='events')
+  user=ForeignKeyField(User, backref='events')
 
   class Meta:
     database = DATABASE

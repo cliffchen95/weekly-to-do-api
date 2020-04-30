@@ -1,5 +1,5 @@
 import models
-
+import datetime
 Event = models.Event
 
 from flask import Blueprint, request, jsonify
@@ -12,5 +12,21 @@ events = Blueprint('events', 'events')
 @events.route('/', methods=['POST'])
 def event():
   if request.method == 'POST':
-    return "hit creation route"
+    payload = request.get_json()
+    new_event = Event.create(
+      category=payload['category'],
+      title=payload['title'],
+      description=payload['description'],
+      date=datetime.date.today(),
+      user=current_user.id
+    )
+
+    event = model_to_dict(new_event)
+    event['user'].pop('password')
+
+    return jsonify(
+      data=event,
+      message=f"Successfully created event for {event['user']} on {event['date']}",
+      status=201
+    ), 201
 
