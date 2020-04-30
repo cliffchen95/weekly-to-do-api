@@ -69,3 +69,9 @@ def goal():
         message="Goal does not exist",
         status=404
       ), 404
+
+
+
+@goals.route('/<id>', methods=['PATCH'])
+def goal_id(id):
+  return "id route"
