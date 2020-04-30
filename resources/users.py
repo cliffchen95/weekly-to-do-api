@@ -4,7 +4,7 @@ User = models.User
 
 from flask import Blueprint, request, jsonify
 from flask_bcrypt import generate_password_hash, check_password_hash
-from flask_login import login_user, current_user
+from flask_login import login_user, current_user, logout_user
 
 from playhouse.shortcuts import model_to_dict
 
@@ -46,6 +46,14 @@ def user():
   if request.method == 'DELETE':
     return "you hit delete route"
 
+  if request.method == 'GET':
+    logout_user()
+    return jsonify(
+      data={},
+      message="Successfully logged out",
+      status=200
+    ), 200
+
 
 @users.route('/login', methods=['POST'])
 def login():
@@ -85,5 +93,5 @@ def login():
     return jsonify(
       data=user,
       message=f"You are currently logged in as {user['username']}",
-      status=200
-    ), 200
+      status=412
+    ), 412
