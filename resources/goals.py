@@ -17,12 +17,11 @@ def goal():
   if not year or not month or not day:
     week = (date.today().toordinal()) // 7  
     start_date = date.fromordinal(week * 7)
-    print(start_date)
+    
   else:
     year, month, day = int(year), int(month), int(day)
     week = (date(year, month, day).toordinal()) // 7  
     start_date = date.fromordinal(week * 7)
-    print(start_date)
 
   if request.method == 'POST':
     payload = request.get_json()
@@ -31,12 +30,12 @@ def goal():
         Goal.start_date == start_date,
         Goal.user_id == current_user.id
       )
-      print(current_user.id)
       return jsonify(
         data={},
         message="Goal already existed",
         status=403
       ), 403
+
     except models.DoesNotExist:
       new_goal = Goal.create(
         goal=payload['goal'],
@@ -50,4 +49,23 @@ def goal():
         message=f"Successfully created new goal for the week starting {goal['start_date']}",
         status=200
       ), 200
-  return "check teriminal"
+
+  if request.method == 'GET':
+    try:
+      goal = Goal.get(
+        Goal.start_date == start_date,
+        Goal.user_id == current_user.id
+      )
+      goal = model_to_dict(goal)
+      goal['user'].pop('password')
+      return jsonify(
+        data={"goal": goal, "start_date": start_date},
+        message="Goal has been found",
+        status=200
+      ), 200
+    except model.DoesNotExist: 
+      return jsonify(
+        data={},
+        message="Goal does not exist",
+        status=404
+      ), 404
