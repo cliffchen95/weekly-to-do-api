@@ -9,7 +9,7 @@ from playhouse.shortcuts import model_to_dict
 
 events = Blueprint('events', 'events')
 
-@events.route('/', methods=['POST'])
+@events.route('/', methods=['GET', 'POST'])
 def event():
   if request.method == 'POST':
     if not current_user.is_authenticated:
@@ -37,3 +37,20 @@ def event():
         status=201
       ), 201
 
+  if request.method == 'GET':
+    if not current_user.is_authenticated:
+      return jsonify(
+        data={ 'error': '403 Forbidden'},
+        message="You need to be logged!",
+        status=403
+      ), 403
+    else:
+      events = [model_to_dict(event) for event in current_user.events]
+      for event_dict in events:
+        (event_dict['user']).pop('password')
+
+      return jsonify(
+        data=events,
+        message=f'You have found {len(events)} events',
+        status=200
+      ), 200
