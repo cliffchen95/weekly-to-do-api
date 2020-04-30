@@ -11,7 +11,7 @@ from playhouse.shortcuts import model_to_dict
 users = Blueprint('users', 'users')
 
 # create and delete user
-@users.route('/', methods=['GET', 'POST', 'DELETE'])
+@users.route('/', methods=['POST', 'DELETE'])
 def user():
   if request.method == 'POST':
     payload = request.get_json()
@@ -44,7 +44,18 @@ def user():
       ), 201
 
   if request.method == 'DELETE':
-    return "you hit delete route"
+    if not current_user.is_authenticated:
+      return jsonify(
+        data={ 'error': '403 Forbidden'},
+        message="You need to be logged!",
+        status=403
+      ), 403
+    else:
+      print(type(current_user))
+      user = User.get(username=current_user.username)
+      logout_user()
+      user.delete_instance()
+      return 'user hit delete route' 
 
 @users.route('/logout', methods=['GET'])
 def user_logout():
