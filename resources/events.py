@@ -12,21 +12,28 @@ events = Blueprint('events', 'events')
 @events.route('/', methods=['POST'])
 def event():
   if request.method == 'POST':
-    payload = request.get_json()
-    new_event = Event.create(
-      category=payload['category'],
-      title=payload['title'],
-      description=payload['description'],
-      date=datetime.date.today(),
-      user=current_user.id
-    )
+    if not current_user.is_authenticated:
+      return jsonify(
+        data={ 'error': '403 Forbidden'},
+        message="You need to be logged!",
+        status=403
+      ), 403
+    else:
+      payload = request.get_json()
+      new_event = Event.create(
+        category=payload['category'],
+        title=payload['title'],
+        description=payload['description'],
+        date=datetime.date.today(),
+        user=current_user.id
+      )
 
-    event = model_to_dict(new_event)
-    event['user'].pop('password')
+      event = model_to_dict(new_event)
+      event['user'].pop('password')
 
-    return jsonify(
-      data=event,
-      message=f"Successfully created event for {event['user']} on {event['date']}",
-      status=201
-    ), 201
+      return jsonify(
+        data=event,
+        message=f"Successfully created event for {event['user']} on {event['date']}",
+        status=201
+      ), 201
 
