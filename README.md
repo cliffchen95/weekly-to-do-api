@@ -18,8 +18,8 @@
 | weekly_goal | TextField |
 | user_id | ForeignKey to User |
 1. /goals, POST, create week
-2. /goals, GET, get week data
-3. /goals, PATCH, update weekly_goal
+2. /goals/start_date, GET, get weekly_goal of the week
+3. /goals/start_date, PATCH, update weekly_goal of the week
 
 ### Event
 | field | description/type |

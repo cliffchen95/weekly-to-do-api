@@ -11,4 +11,7 @@ goals = Blueprint('goals', 'goals')
 
 @goals.route('/', methods=['GET'])
 def goal():
-  return "goal Blueprint!"
+  year = request.args.get('year')
+  month = request.args.get('month')
+  day = request.args.get('day')
+  return f"{year} - {month} - {day}"
