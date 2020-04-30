@@ -43,6 +43,7 @@ def user():
         status=201
       ), 201
 
+  ## will need to implement func to delete all other data
   if request.method == 'DELETE':
     if not current_user.is_authenticated:
       return jsonify(
@@ -55,7 +56,11 @@ def user():
       user = User.get(username=current_user.username)
       logout_user()
       user.delete_instance()
-      return 'user hit delete route' 
+      return jsonify(
+        data={}, 
+        message='User deleted!',
+        status=200,
+      ), 200
 
 @users.route('/logout', methods=['GET'])
 def user_logout():
