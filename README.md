@@ -24,14 +24,14 @@
 ### Event
 | field | description/type |
 | ----------- | ----------- |
-| type | TextField |
+| category | TextField |
 | title | TextField |
 | description | TextField |
 | date | DateField |
 | user_id | ForeignKey to User |
-1. /events/<id>, GET, get one event data
+1. /events/id, GET, get one event data
 2. /events, POST, create event
-3. /events/<id>, DELETE, delete one event
-4. /events/<id>, PATCH, update one event
-5. /events/?start=<date>&days=<days>, GET, get all of the events from start date to limit days. (use request.args.get)
+3. /events/id, DELETE, delete one event
+4. /events/id, PATCH, update one event
+5. /events/?start=date&days=days, GET, get all of the events from start date to limit days. (use request.args.get)
 

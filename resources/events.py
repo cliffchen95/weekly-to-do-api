@@ -9,7 +9,8 @@ from playhouse.shortcuts import model_to_dict
 
 events = Blueprint('events', 'events')
 
-@events.route('/', methods=['GET'])
+@events.route('/', methods=['POST'])
 def event():
-  return "events blueprint connected"
+  if request.method == 'POST':
+    return "hit creation route"
 
