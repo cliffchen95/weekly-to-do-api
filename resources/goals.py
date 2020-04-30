@@ -10,7 +10,7 @@ from playhouse.shortcuts import model_to_dict
 goals = Blueprint('goals', 'goals')
 
 @goals.route('/', methods=['GET', 'POST'])
-def goal():
+def goal_index():
   if not current_user.is_authenticated:
     return jsonify(
       data={ 'error': '403 Forbidden'},

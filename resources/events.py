@@ -10,7 +10,7 @@ from playhouse.shortcuts import model_to_dict
 events = Blueprint('events', 'events')
 
 @events.route('/', methods=['GET', 'POST'])
-def event():
+def event_index():
   if not current_user.is_authenticated:
     return jsonify(
       data={ 'error': '403 Forbidden'},
@@ -39,9 +39,27 @@ def event():
 
     # need to implement query to select specfic dates and days
     if request.method == 'GET':
-      events = [model_to_dict(event) for event in current_user.events]
-      for event_dict in events:
-        (event_dict['user']).pop('password')
+      year = request.args.get('year')
+      month = request.args.get('month')
+      day = request.args.get('day')
+      if not year or not month or not day:
+        week = (date.today().toordinal()) // 7  
+        start_date = date.fromordinal(week * 7)
+        
+      else:
+        year, month, day = int(year), int(month), int(day)
+        week = (date(year, month, day).toordinal()) // 7  
+        start_date = date.fromordinal(week * 7)
+      
+      days = int(request.args.get('days', default=7))
+      end_date = start_date + timedelta(days=days)
+
+      events = Event.select().where( Event.date >= start_date
+        ).where( Event.date <= end_date
+        ).where( Event.user_id == current_user.id)
+      events = [model_to_dict(event) for event in events]
+      for event in events:
+        (event['user']).pop('password')
 
       return jsonify(
         data=events,
