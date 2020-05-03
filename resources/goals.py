@@ -52,7 +52,7 @@ def goal_index():
       goal = model_to_dict(new_goal)
       goal['user'].pop('password')
       return jsonify(
-        data=goal,
+        data={"goal": goal, "start_date": start_date},
         message=f"Successfully created new goal for the week starting {goal['start_date']}",
         status=200
       ), 200
